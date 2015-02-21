@@ -9,11 +9,16 @@
  **/
 
 class Card {
-	public $front = '';
-	public $back = '';
-	public $interval = 0;
-	public $lastSeenDate = '0';
-	public $nextDate = '0';
+	public $front;
+	public $back;
+	private $interval = 0;
+	private $lastSeenDate = '0';
+	private $nextDate = '0';
+	
+	public function __construct($front, $back) {
+		$this->front = $front;
+		$this->back = $back;
+	}
 }
 
 ?>
