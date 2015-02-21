@@ -19,7 +19,6 @@ if (!empty($_GET[$PAGE_GET_VAR])) {
 	if ($page == $PAGE_GET_NAME_ADD) {
 		// set correct view
 		$view = new AddView();
-		
 	} elseif ($page == $PAGE_GET_NAME_REVIEW) {
 		// display review card prompt
 	} else {
