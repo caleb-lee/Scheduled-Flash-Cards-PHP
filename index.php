@@ -1,5 +1,30 @@
 <?php
-$TITLE = "Spaced Repetition Flash Card System"
+// set the page title
+$PAGE_TITLE = "Spaced Repetition Flash Card System";
+$PAGE_GET_NAME_ADD = "add";
+$PAGE_GET_NAME_REVIEW = "review";
+
+
+// figure out which menu to display and display it
+//	also figure out the correct controller if applicable
+$view;
+$controller;
+$viewOutput = "";
+
+// get the page from the URL
+$page = $_GET['page'];
+
+// display the correct page
+if (!empty($page)) {
+	if ($page == $PAGE_GET_NAME_ADD) {
+		// display add card prompt
+	} elseif ($page == $PAGE_GET_NAME_REVIEW) {
+		// display review card prompt
+	}
+} else {
+	// display the main menu
+	$viewOutput = "main menu";
+}
 
 ?>
 
@@ -7,8 +32,9 @@ $TITLE = "Spaced Repetition Flash Card System"
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 		<meta charset="UTF-8">
-		<title><?php echo $TITLE; ?></title>
+		<title><?php echo $PAGE_TITLE; ?></title>
 	</head>
 	<body>
+		<?php echo $viewOutput; ?>
 	</body>
 </html>
