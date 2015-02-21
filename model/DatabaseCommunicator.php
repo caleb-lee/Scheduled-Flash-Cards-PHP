@@ -4,7 +4,8 @@
  * Author: Caleb Lee
  *
  * This class does all database communication for the flash card application. It uses
- *	MySQL in its current form.
+ *	MySQL in its current form. It creates tables and entries in the given database 
+ *	as needed.
  **/
  
 require_once('Card.php');

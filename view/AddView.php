@@ -17,17 +17,27 @@ class AddView extends GenericView {
 	}
 	
 	private function generateBody() {
-		global $PAGE_GET_VAR, $PAGE_GET_NAME_ADD, $ADD_POST_VARIABLE_FRONT, $ADD_POST_VARIABLE_BACK;
+		global $PAGE_GET_VAR, $PAGE_GET_NAME_ADD, $ADD_POST_VARIABLE_FRONT, 
+					$ADD_POST_VARIABLE_BACK;
 		
-		$body = "<form action=\"?" . $PAGE_GET_VAR . "=" . $PAGE_GET_NAME_ADD . "\" method=\"post\">\n";
+		$body = "<form action=\"?" . $PAGE_GET_VAR . "=" . 
+					$PAGE_GET_NAME_ADD . "\" method=\"post\">\n";
 		$body = $body . "Card Front: <br />\n";
-		$body = $body . "<textarea name=\"" . $ADD_POST_VARIABLE_FRONT . "\"></textarea><br /><br />\n";
+		$body = $body . $this->generateTextAreaWithName($ADD_POST_VARIABLE_FRONT);
 		$body = $body . "Card Back: <br />\n";
-		$body = $body . "<textarea name=\"" . $ADD_POST_VARIABLE_BACK . "\"></textarea><br /><br />\n";
+		$body = $body . $this->generateTextAreaWithName($ADD_POST_VARIABLE_BACK);
 		$body = $body . "<input type=\"submit\" value=\"Submit\">";
 		$body = $body . "</form>\n";
 		
 		return $body;
+	}
+	
+	private function generateTextAreaWithName($name) {
+		$TEXT_AREA_ROWS = 15;
+		$TEXT_AREA_COLS = 70;
+		
+		return "<textarea name=\"" . $name . "\" rows=\"" . $TEXT_AREA_ROWS . 
+					"\" cols=\"" . $TEXT_AREA_COLS . "\"></textarea><br /><br />";
 	}
 	
 	public function output() {
