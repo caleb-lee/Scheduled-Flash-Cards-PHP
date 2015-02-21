@@ -31,7 +31,11 @@ if (!empty($_GET[$PAGE_GET_VAR])) {
 	$view = new MainMenuView();
 }
 
+// set the view output
 $viewOutput = $view->output();
+
+// set the page title
+$pageTitle = $APP_TITLE . " - " . $view->title;
 
 ?>
 
@@ -39,7 +43,7 @@ $viewOutput = $view->output();
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 		<meta charset="UTF-8">
-		<title><?php echo $PAGE_TITLE; ?></title>
+		<title><?php echo $pageTitle; ?></title>
 	</head>
 	<body>
 		<?php echo $viewOutput; ?>

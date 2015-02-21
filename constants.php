@@ -2,8 +2,8 @@
 // this file keeps track of constants that are used 
 //	across classes, like POST variable names
 
-// set the page title
-$PAGE_TITLE = "Spaced Repetition Flash Card System";
+// the title of the application
+$APP_TITLE = "Spaced Repetition Flash Card System";
 
 // page names
 $PAGE_GET_VAR = "page";
