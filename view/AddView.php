@@ -4,27 +4,36 @@
  * Author: Caleb Lee
  *
  * This class represents a prompt to add a card to the program.
- * Use the "output" method to obtain the full view.
+ * Use the "body" method to obtain the full view.
  ***/
  
 require_once(__DIR__ . '/../constants.php');
+require_once('GenericView.php');
  
-class AddView {
-	public function output() {
-		global $PAGE_GET_VAR, $PAGE_GET_NAME_ADD, $ADD_POST_VARIABLE_FRONT, $ADD_POST_VARIABLE_BACK;
+class AddView extends GenericView {
+	public function __construct() {
+		$this->title = "Add Card";
+		$this->body = ""; // we are going to generate the body when body is called
+	}
 	
-		$output = "<h2>Add Card</h2>";
+	private function generateBody() {
+		global $PAGE_GET_VAR, $PAGE_GET_NAME_ADD, $ADD_POST_VARIABLE_FRONT, $ADD_POST_VARIABLE_BACK;
 		
-		// add the form
-		$output = $output . "<form action=\"?" . $PAGE_GET_VAR . "=" . $PAGE_GET_NAME_ADD . "\" method=\"post\">\n";
-		$output = $output . "Card Front: <br />\n";
-		$output = $output . "<textarea name=\"" . $ADD_POST_VARIABLE_FRONT . "\"></textarea><br /><br />\n";
-		$output = $output . "Card Back: <br />\n";
-		$output = $output . "<textarea name=\"" . $ADD_POST_VARIABLE_BACK . "\"></textarea><br /><br />\n";
-		$output = $output . "<input type=\"submit\" value=\"Submit\">";
-		$output = $output . "</form>\n";
+		$body = "<form action=\"?" . $PAGE_GET_VAR . "=" . $PAGE_GET_NAME_ADD . "\" method=\"post\">\n";
+		$body = $body . "Card Front: <br />\n";
+		$body = $body . "<textarea name=\"" . $ADD_POST_VARIABLE_FRONT . "\"></textarea><br /><br />\n";
+		$body = $body . "Card Back: <br />\n";
+		$body = $body . "<textarea name=\"" . $ADD_POST_VARIABLE_BACK . "\"></textarea><br /><br />\n";
+		$body = $body . "<input type=\"submit\" value=\"Submit\">";
+		$body = $body . "</form>\n";
 		
-		return $output;
+		return $body;
+	}
+	
+	public function output() {
+		$this->body = $this->generateBody();
+	
+		return parent::output();
 	}
 }
 ?>

@@ -6,16 +6,21 @@
  * This class simply displays a menu to go to various portions of the web app.
  ***/
 require_once(__DIR__ . '/../constants.php');
+require_once('GenericView.php');
 
-class MainMenuView {
-	public function output() {
-		global $PAGE_GET_VAR, $PAGE_GET_NAME_ADD, $PAGE_GET_NAME_REVIEW;
+class MainMenuView extends GenericView {
+	public function __construct() {
+		$this->title = "<h2>Scheduled Flash Cards</h2>";
+		$this->body = $this->generateBody();
+	}
 	
-		$output = "<h2>Scheduled Flash Cards</h2>";
-		$output = $output . "<a href=\"?" . $PAGE_GET_VAR . "=" . $PAGE_GET_NAME_ADD . "\">Add Cards</a><br /><br />";
-		$output = $output . "<a href=\"?" . $PAGE_GET_VAR . "=" . $PAGE_GET_NAME_REVIEW . "\">Review Cards</a>";
+	private function generateBody() {
+		global $PAGE_GET_VAR, $PAGE_GET_NAME_ADD, $PAGE_GET_NAME_REVIEW;
 		
-		return $output;
+		$body = "<a href=\"?" . $PAGE_GET_VAR . "=" . $PAGE_GET_NAME_ADD . "\">Add Cards</a><br /><br />";
+		$body = $body . "<a href=\"?" . $PAGE_GET_VAR . "=" . $PAGE_GET_NAME_REVIEW . "\">Review Cards</a>";
+		
+		return $body;
 	}
 }
 
