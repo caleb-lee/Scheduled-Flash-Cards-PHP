@@ -17,8 +17,10 @@ class MainMenuView extends GenericView {
 	private function generateBody() {
 		global $PAGE_GET_VAR, $PAGE_GET_NAME_ADD, $PAGE_GET_NAME_REVIEW;
 		
-		$body = "<a href=\"?" . $PAGE_GET_VAR . "=" . $PAGE_GET_NAME_ADD . "\">Add Cards</a><br /><br />";
-		$body = $body . "<a href=\"?" . $PAGE_GET_VAR . "=" . $PAGE_GET_NAME_REVIEW . "\">Review Cards</a>";
+		$body = "<a href=\"?" . $PAGE_GET_VAR . "=" . $PAGE_GET_NAME_ADD . 
+					"\">Add Cards</a><br /><br />";
+		$body = $body . "<a href=\"?" . $PAGE_GET_VAR . "=" . $PAGE_GET_NAME_REVIEW . 
+					"\">Review Cards</a>";
 		
 		return $body;
 	}
