@@ -18,11 +18,16 @@ class DatabaseCommunicator {
 	const DB_URL = "localhost";
 	const DB_PORT = 3306;
 	
-	// constants (table names)
+	// constants (table/column names)
 	const CARD_TABLE_NAME = "flashcards";
+	const CARD_ENTRY_ID = "id";
+	const CARD_ENTRY_FRONT = "front";
+	const CARD_ENTRY_BACK = "back";
+	const CARD_ENTRY_LAST_SEEN = "lastSeen";
+	const CARD_ENTRY_NEXT_SHOW = "nextShow";
+	const CARD_ENTRY_INTERVAL = "cardInterval";
 	
 	private $db;
-	private $rowCount = -1;
 
 	public function __construct() {
 		// connect to mysql and select the correct db
@@ -60,18 +65,52 @@ class DatabaseCommunicator {
 	// creates the flashcard table
 	private function createCardTable() {
 		$this->db->query('CREATE TABLE ' . self::CARD_TABLE_NAME . ' (
-			id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-			front VARCHAR(16000000) NOT NULL,
-			back VARCHAR(16000000),
-			lastSeen DATE,
-			nextShow DATE,
-			cardInterval INT(6) UNSIGNED
+			' . self::CARD_ENTRY_ID . ' INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+			' . self::CARD_ENTRY_FRONT . ' VARCHAR(16000000) NOT NULL,
+			' . self::CARD_ENTRY_BACK . ' VARCHAR(16000000),
+			' . self::CARD_ENTRY_LAST_SEEN . ' DATE,
+			' . self::CARD_ENTRY_NEXT_SHOW . ' DATE,
+			' . self::CARD_ENTRY_INTERVAL . ' INT(6) UNSIGNED
 		)');
 	}
 	
+	// get card with ID
+	public function getCardWithID($cardID) {
+		// do sql query
+		$result = $this->db->query('SELECT * FROM ' . self::CARD_TABLE_NAME . '
+									WHERE id=' . $cardID);
+		$row = $result->fetch();
+		if (!empty($row)) {
+			$resultCard = $this->makeCardFromFetchedRow($row);
+		
+			return $resultCard;
+		}
+	}
+	
+	private function makeCardFromFetchedRow($row) {
+		$resultCard = new Card($row[self::CARD_ENTRY_FRONT], $row[self::CARD_ENTRY_BACK]);
+		
+		$resultCard->cardID = $row[self::CARD_ENTRY_ID];
+		$resultCard->lastSeenDate = $row[self::CARD_ENTRY_LAST_SEEN];
+		$resultCard->nextDate = $row[self::CARD_ENTRY_NEXT_SHOW];
+		$resultCard->interval = $row[self::CARD_ENTRY_INTERVAL];
+		
+		return $resultCard;
+	}
+	
 	// gets the card that needs to be reviewed
+	//	this grabs a single card which has a due date less than or equal to today
+	//	if there are no due cards; it returns null
 	public function getReviewCard() {
-		// TODO
+		$result = $this->db->query('SELECT * FROM ' . self::CARD_TABLE_NAME . '
+									WHERE ' . self::CARD_ENTRY_NEXT_SHOW . ' <= CURDATE()
+									ORDER BY ' . self::CARD_ENTRY_NEXT_SHOW . ' ASC LIMIT 1');
+		$row = $result->fetch();
+		
+		if (!empty($row)) {
+			$resultCard = $this->makeCardFromFetchedRow($row);
+			return $resultCard;
+		}
 	}
 	
 	// gets all cards in range (0 is newest, n-1 is oldest) in an array
@@ -86,45 +125,80 @@ class DatabaseCommunicator {
 		if ($firstCard < 0)
 			exit("DatabaseCommunicator error: $firstCard less than 0");
 		
-		// TODO
+		$limit = ($lastCard - $firstCard) + 1;
+		$result = $this->db->query('SELECT * FROM ' . self::CARD_TABLE_NAME . '
+									ORDER BY ' . self::CARD_ENTRY_NEXT_SHOW . ' ASC 
+									LIMIT ' . $limit . ' OFFSET ' . $firstCard);
+									
+		$cardArray;
+		$i = 0;
+		$row = $result->fetch();
+		while (!empty($row)) {
+			$cardArray[$i] = $this->makeCardFromFetchedRow($row);
+			$i++;
+			$row = $result->fetch();
+		}
+		
+		return $cardArray;
 	}
 	
 	// gets total number of cards in database
 	public function countCards() {
-		// keep track of rowCount so we don't have to query every time we need it
-		if ($this->rowCount == -1) {
-			$countResult = $this->db->query('SELECT * FROM ' . self::CARD_TABLE_NAME);
-			$this->rowCount = $countResult->rowCount();
-		}
-	
-		return $this->rowCount;
+		$countResult = $this->db->query('SELECT * FROM ' . self::CARD_TABLE_NAME);
+		return $countResult->rowCount();
 	}
 	
 	// adds a card to the database
 	//	$card must be of type Card
 	public function addCard($card) {
-		// TODO
+		// prepare SQL statement
+		$stmt = $this->db->prepare('INSERT INTO ' . self::CARD_TABLE_NAME . 
+											'(' . self::CARD_ENTRY_FRONT . ',
+											' . self::CARD_ENTRY_BACK . ',
+											' . self::CARD_ENTRY_LAST_SEEN . ',
+											' . self::CARD_ENTRY_NEXT_SHOW . ',
+											' . self::CARD_ENTRY_INTERVAL . ')
+									VALUES ( \'' . $card->front . '\',
+											 \'' . $card->back . '\',
+											 \'' . $card->lastSeenDate . '\',
+											 \'' . $card->nextDate . '\',
+											 \'' . $card->interval . '\');');
 		
-		
+		// execute statement and edit card object to have correct ID
+		if ($stmt->execute())
+			$card->cardID = $this->db->lastInsertId();
 	}
 	
 	// deletes a card from the database
 	//	$card must be of type Card
 	//	does nothing if card with id doesn't exist in database
+	//	ONLY THE ID HAS TO MATCH
 	public function deleteCard($card) {
-		// TODO
+		// prepare SQL statement
+		$stmt = $this->db->prepare('DELETE FROM ' . self::CARD_TABLE_NAME . ' WHERE
+									id=' . $card->cardID . ' LIMIT 1');
+									
+		// execute statement
+		$stmt->execute();
 	}
 	
 	// appends a card in the database
 	//	$card must be of type Card
 	//	does nothing if card with id does not exist in database
+	//	ONLY THE ID HAS TO MATCH
 	public function appendCard($card) {
-		// TODO
+		// prepare SQL statement
+		$stmt = $this->db->prepare('UPDATE ' . self::CARD_TABLE_NAME . '
+									SET ' . self::CARD_ENTRY_FRONT . '=\'' . $card->front . '\',
+										' . self::CARD_ENTRY_BACK . '=\'' . $card->back . '\',
+										' . self::CARD_ENTRY_LAST_SEEN . '=\'' . $card->lastSeenDate . '\',
+										' . self::CARD_ENTRY_NEXT_SHOW . '=\'' . $card->nextDate . '\',
+										' . self::CARD_ENTRY_INTERVAL . '=\'' . $card->interval . '\'
+									WHERE id=' . $card->cardID . '');
+		
+		// execute statement
+		$stmt->execute();
 	}
 }
-
-// test shit
-$dbcomm = new DatabaseCommunicator();
-echo $dbcomm->countCards();
 
 ?>
