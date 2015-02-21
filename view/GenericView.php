@@ -14,7 +14,7 @@ abstract class GenericView {
 	public $body;
 	
 	public function output() {
-		$output = "<h2>" . $this->title . "</h2>" . $this->body;
+		$output = "<h3>" . $this->title . "</h3>" . $this->body;
 		
 		return $output;
 	}
