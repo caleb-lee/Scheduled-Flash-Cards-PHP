@@ -2,6 +2,7 @@
 // include views and controllers
 require_once('constants.php');
 require_once('view/AddView.php');
+require_once('view/MainMenuView.php');
 
 // figure out which menu to display and display it
 //	also figure out the correct controller if applicable
@@ -9,11 +10,11 @@ $view;
 $controller;
 $viewOutput = "";
 
-// get the page from the URL
-$page = $_GET[$PAGE_GET_VAR];
-
 // display the correct page
-if (!empty($page)) {
+if (!empty($_GET[$PAGE_GET_VAR])) {
+	// get page URL if it exists
+	$page = $_GET[$PAGE_GET_VAR];
+
 	if ($page == $PAGE_GET_NAME_ADD) {
 		// set correct view
 		$view = new AddView();
@@ -24,7 +25,8 @@ if (!empty($page)) {
 		// display error
 	}
 } else {
-	// display the main menu
+	// set the main menu as the view
+	$view = new MainMenuView();
 }
 
 $viewOutput = $view->output();
