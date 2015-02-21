@@ -3,6 +3,7 @@
 require_once('constants.php');
 require_once('view/AddView.php');
 require_once('view/MainMenuView.php');
+require_once('view/ErrorView.php');
 
 // figure out which menu to display and display it
 //	also figure out the correct controller if applicable
@@ -22,7 +23,8 @@ if (!empty($_GET[$PAGE_GET_VAR])) {
 	} elseif ($page == $PAGE_GET_NAME_REVIEW) {
 		// display review card prompt
 	} else {
-		// display error
+		// set the error class as the view
+		$view = new ErrorView();
 	}
 } else {
 	// set the main menu as the view
