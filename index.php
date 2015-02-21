@@ -1,9 +1,11 @@
 <?php
+// include views and controllers
+include_once('view/AddView.php');
+
 // set the page title
 $PAGE_TITLE = "Spaced Repetition Flash Card System";
 $PAGE_GET_NAME_ADD = "add";
 $PAGE_GET_NAME_REVIEW = "review";
-
 
 // figure out which menu to display and display it
 //	also figure out the correct controller if applicable
@@ -17,14 +19,17 @@ $page = $_GET['page'];
 // display the correct page
 if (!empty($page)) {
 	if ($page == $PAGE_GET_NAME_ADD) {
-		// display add card prompt
+		// set correct view
+		$view = new AddView();
+		
 	} elseif ($page == $PAGE_GET_NAME_REVIEW) {
 		// display review card prompt
 	}
 } else {
 	// display the main menu
-	$viewOutput = "main menu";
 }
+
+$viewOutput = $view->output();
 
 ?>
 
