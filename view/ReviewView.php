@@ -47,10 +47,13 @@ class ReviewView extends GenericView {
 		if ($this->answerMode) {
 			// get card with ID
 			// display back
-			$body = $body . "<p>" . $this->getCardBack() . "</p>";
+			$body = $body . "<h4>Back:</h4><p>" . $this->getCardBack() . "</p>";
 			
 			// display difficulty buttons
 			$body = $body . $this->getDifficultyButtons();
+			
+			// display front
+			$body = $body . "<h4>Front:</h4><p>" . $this->getCardFront() . "</p>";
 			
 		} else {
 			// if controller has a status string, display it
@@ -64,7 +67,7 @@ class ReviewView extends GenericView {
 			if ($cardFront == null) {
 				$body = $body . "<p>No cards left to review.</p>";
 			} else {
-				$body = $body . "<p>" . $cardFront . "</p>";
+				$body = $body . "<h4>Front:</h4><p>" . $cardFront . "</p>";
 				
 				// display show answer button
 				$body = $body . $this->getShowAnswerButton();
