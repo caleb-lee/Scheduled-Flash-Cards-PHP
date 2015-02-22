@@ -46,6 +46,7 @@ class DatabaseCommunicator {
 		} catch(PDOException $ex) {
 			echo "<b>Set correct database information in 'model/DatabaseCommunicator.php'</b><br /><br />";
 			echo $ex;
+			exit();
 		}
 		
 		// check if card table exists; if not create it
