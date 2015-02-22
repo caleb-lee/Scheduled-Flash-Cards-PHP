@@ -20,7 +20,6 @@ class ReviewView extends GenericView {
 	const CARD_MODE_VARIABLE = "mode";
 	const CARD_MODE_QUESTION = "question";
 	const CARD_MODE_ANSWER = "answer";
-	const CARD_ID_VARIABLE = "cardid";
 
 	public function __construct($dbCommunicator) {
 		$this->dbComm = $dbCommunicator;
@@ -39,6 +38,7 @@ class ReviewView extends GenericView {
 			$this->answerMode = false;
 	}
 	
+	// generates a string to be used with the body property
 	private function generateBody() {
 		$body = "";
 	
@@ -68,6 +68,8 @@ class ReviewView extends GenericView {
 		return $body;
 	}
 	
+	// gets the card from dbComm, sets it as the card property of this view, and
+	//	returns the front of the card as a string
 	private function getCardFront() {
 		$this->card = $this->dbComm->getReviewCard();
 		
@@ -77,6 +79,8 @@ class ReviewView extends GenericView {
 			return null;
 	}
 	
+	// returns the "Show Answer" button form, including hidden parts to communicate
+	//	with the answer page
 	private function getShowAnswerButton () {
 		// use hidden forms to communicate card id and answer mode
 		$answerButton = $this->getAnswerFormHeader() . "<input type=\"hidden\" name=\"" 
@@ -87,9 +91,13 @@ class ReviewView extends GenericView {
 		return $answerButton;
 	}
 	
+	// gets the card from dbComm using its ID, sets it as the card property of this view, 
+	//	and returns the back of the card as a string
 	private function getCardBack() {
-		if (isset($_POST[self::CARD_ID_VARIABLE])) {
-			$cardID = (int)($_POST[self::CARD_ID_VARIABLE]);
+		global $CARD_ID_VARIABLE;
+	
+		if (isset($_POST[$CARD_ID_VARIABLE])) {
+			$cardID = (int)($_POST[$CARD_ID_VARIABLE]);
 			
 			$this->card = $this->dbComm->getCardWithID($cardID);
 			return $this->card->back;
@@ -97,6 +105,8 @@ class ReviewView extends GenericView {
 			exit("ReviewView getCardBack() called unexpectedly");
 	}
 	
+	// returns the form which allows the user to answer how difficult the card was
+	//	including hidden POSTs to communicate card ID with the controller
 	private function getDifficultyButtons() {
 		global $DIFFICULTY_POST_VARIABLE, $DIFFICULTY_POST_WRONG, $DIFFICULTY_POST_HARD,
 				$DIFFICULTY_POST_GOOD, $DIFFICULTY_POST_EASY;
@@ -127,15 +137,21 @@ class ReviewView extends GenericView {
 		return $buttons;
 	}
 	
+	// returns a hidden input to communicate the card ID of the card property
+	//	to the next page
 	private function makeCardIDInput() {
-		return "<input type=\"hidden\" name=\"" . self::CARD_ID_VARIABLE . "\" value=\"" . 
+		global $CARD_ID_VARIABLE;
+	
+		return "<input type=\"hidden\" name=\"" . $CARD_ID_VARIABLE . "\" value=\"" . 
 					$this->card->cardID . "\">";
 	}
 	
+	// returns a submit button with a given name and value
 	private function makeSubmitButtonWithNameAndValue($name, $value) {
 		return "<input type=\"submit\" name=\"" . $name . "\" value=\"" . $value . "\">";
 	}
 	
+	// returns the header for both the Show Answer button and the card difficulty buttons
 	private function getAnswerFormHeader() {
 		global $PAGE_GET_VAR, $PAGE_GET_NAME_REVIEW;
 		
@@ -143,6 +159,7 @@ class ReviewView extends GenericView {
 						"\" method=\"POST\">";
 	}
 	
+	// generates and returns the body property
 	public function output() {
 		$this->body = $this->generateBody();
 		

@@ -21,4 +21,7 @@ $DIFFICULTY_POST_HARD = "Hard";
 $DIFFICULTY_POST_GOOD = "Good";
 $DIFFICULTY_POST_EASY = "Easy";
 
+// card ID
+$CARD_ID_VARIABLE = "cardid";
+
 ?>
