@@ -34,11 +34,16 @@ class DatabaseCommunicator {
 
 	public function __construct() {
 		// connect to mysql and select the correct db
-		$this->db = new PDO('mysql:host=' . self::DB_URL . ';port=' . self::DB_PORT . 
+		try {
+			$this->db = new PDO('mysql:host=' . self::DB_URL . ';port=' . self::DB_PORT . 
 							';dbname=' . self::DB_NAME . ';charset=utf8', 
 							self::DB_USERNAME, self::DB_PASSWORD);
-		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+			$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		} catch(PDOException $ex) {
+			echo "<b>Set correct database information in 'model/DatabaseCommunicator.php'</b><br /><br />";
+			echo $ex;
+		}
 		
 		// check if card table exists; if not create it
 		if (!$this->cardTableExists())
