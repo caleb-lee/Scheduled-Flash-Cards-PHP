@@ -3,7 +3,7 @@
 //	across classes, like POST variable names
 
 // the title of the application
-$APP_TITLE = "Spaced Repetition Flash Card System";
+$APP_TITLE = "Scheduled Flash Cards";
 
 // page names
 $PAGE_GET_VAR = "page";
