@@ -105,7 +105,8 @@ class DatabaseCommunicator {
 	public function getReviewCard() {
 		$result = $this->db->query('SELECT * FROM ' . self::CARD_TABLE_NAME . '
 									WHERE ' . self::CARD_ENTRY_NEXT_SHOW . ' <= CURDATE()
-									ORDER BY ' . self::CARD_ENTRY_NEXT_SHOW . ' ASC LIMIT 1');
+									ORDER BY ' . self::CARD_ENTRY_NEXT_SHOW . ', ' 
+									. self::CARD_ENTRY_LAST_SEEN . ' ASC LIMIT 1');
 		$row = $result->fetch();
 		
 		if (!empty($row)) {

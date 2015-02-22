@@ -32,7 +32,7 @@ if (!empty($_GET[$PAGE_GET_VAR])) {
 	} elseif ($page == $PAGE_GET_NAME_REVIEW) {
 		// set the correct controller and view
 		$controller = new ScheduleController($dbComm);
-		$view = new ReviewView($dbComm);
+		$view = new ReviewView($controller, $dbComm);
 		
 	} else {
 		// set the error class as the view

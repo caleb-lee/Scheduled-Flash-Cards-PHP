@@ -4,7 +4,7 @@
  * Author: Caleb Lee
  *
  * This class represents a flash card. It has a front (containing text),
- * a back (also containing text), an interval (amount of time in seconds between last seen 
+ * a back (also containing text), an interval (amount of time in days between last seen 
  * and now) and a next see date (calculated by some controller)
  **/
 

@@ -16,13 +16,15 @@ class ReviewView extends GenericView {
 	private $dbComm;
 	private $card;
 	private $answerMode;
+	private $controller;
 	
 	const CARD_MODE_VARIABLE = "mode";
 	const CARD_MODE_QUESTION = "question";
 	const CARD_MODE_ANSWER = "answer";
 
-	public function __construct($dbCommunicator) {
+	public function __construct($controller, $dbCommunicator) {
 		$this->dbComm = $dbCommunicator;
+		$this->controller = $controller;
 		$this->title = "Review Cards";
 		$this->body = ""; // generate it when shown
 		$this->determineIfInAnswerMode();
@@ -51,6 +53,10 @@ class ReviewView extends GenericView {
 			$body = $body . $this->getDifficultyButtons();
 			
 		} else {
+			// if controller has a status string, display it
+			if ($this->controller->statusString() != "")
+				$body = $body . "<p>" . $this->controller->statusString() . "</p>";
+		
 			// get review card
 			// display front
 			$cardFront = $this->getCardFront();
