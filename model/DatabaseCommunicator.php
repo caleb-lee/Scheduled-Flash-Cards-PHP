@@ -3,9 +3,9 @@
  * Card class
  * Author: Caleb Lee
  *
- * This class does all database communication for the flash card application. It uses
- *	MySQL in its current form. It creates tables and entries in the given database 
- *	as needed.
+ * This class does all database communication and converts everything into usable forms
+ *	(i.e., Card objects) for the rest of the application. In its current form, it uses
+ *	MySQL.
  **/
  
 require_once('Card.php');
@@ -31,8 +31,9 @@ class DatabaseCommunicator {
 
 	public function __construct() {
 		// connect to mysql and select the correct db
-		$this->db = new PDO('mysql:host=' . self::DB_URL . ';port=' . self::DB_PORT . ';dbname=' . 
-			self::DB_NAME . ';charset=utf8', self::DB_USERNAME, self::DB_PASSWORD);
+		$this->db = new PDO('mysql:host=' . self::DB_URL . ';port=' . self::DB_PORT . 
+							';dbname=' . self::DB_NAME . ';charset=utf8', 
+							self::DB_USERNAME, self::DB_PASSWORD);
 		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		

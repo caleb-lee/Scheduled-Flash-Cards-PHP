@@ -78,18 +78,13 @@ class ReviewView extends GenericView {
 	}
 	
 	private function getShowAnswerButton () {
-		global $PAGE_GET_VAR, $PAGE_GET_NAME_REVIEW;
-
-		$answerButton = "<form action=\"?" . $PAGE_GET_VAR . 
-						"=" . $PAGE_GET_NAME_REVIEW . 
-						"\" method=\"POST\"><input type=\"hidden\" name=\"" 
+		// use hidden forms to communicate card id and answer mode
+		$answerButton = $this->getAnswerFormHeader() . "<input type=\"hidden\" name=\"" 
 						. self::CARD_MODE_VARIABLE . "\" value=\"" . 
-						self::CARD_MODE_ANSWER . "\"><input type=\"hidden\" name=\"" 
-						. self::CARD_ID_VARIABLE . "\" value=\"" . 
-						$this->card->cardID . "\">
+						self::CARD_MODE_ANSWER . "\">" . $this->makeCardIDInput() . "
 						<input type=\"submit\" value=\"Show Back\"></form>";
 	
-		return $answerButton; // TODO
+		return $answerButton;
 	}
 	
 	private function getCardBack() {
@@ -103,7 +98,49 @@ class ReviewView extends GenericView {
 	}
 	
 	private function getDifficultyButtons() {
-		return "";  // TODO
+		global $DIFFICULTY_POST_VARIABLE, $DIFFICULTY_POST_WRONG, $DIFFICULTY_POST_HARD,
+				$DIFFICULTY_POST_GOOD, $DIFFICULTY_POST_EASY;
+
+		$buttons = $this->getAnswerFormHeader();
+		
+		// make a hidden table to lay out the buttons
+		$buttons = $buttons . '<table border="0px"><tr>';
+		
+		// make buttons within the table
+		$buttons = $buttons . "<td>" . $this->makeSubmitButtonWithNameAndValue($DIFFICULTY_POST_VARIABLE, $DIFFICULTY_POST_WRONG) . "</td>";
+		$buttons = $buttons . "<td>" . $this->makeSubmitButtonWithNameAndValue($DIFFICULTY_POST_VARIABLE, $DIFFICULTY_POST_HARD) . "</td>";
+		$buttons = $buttons . "<td>" . $this->makeSubmitButtonWithNameAndValue($DIFFICULTY_POST_VARIABLE, $DIFFICULTY_POST_GOOD) . "</td>";
+		$buttons = $buttons . "<td>" . $this->makeSubmitButtonWithNameAndValue($DIFFICULTY_POST_VARIABLE, $DIFFICULTY_POST_EASY) . "</td>";
+		
+		// end the table
+		$buttons = $buttons . "</tr></table>";
+		
+		// make hidden forms to communicate card ID and question mode
+		$buttons = $buttons . "<input type=\"hidden\" name=\""
+					 . self::CARD_MODE_VARIABLE . "\" value=\"" . 
+					 self::CARD_MODE_QUESTION . "\">";
+		$buttons = $buttons . $this->makeCardIDInput();
+		
+		// end the form
+		$buttons = $buttons . "</form>";
+		
+		return $buttons;
+	}
+	
+	private function makeCardIDInput() {
+		return "<input type=\"hidden\" name=\"" . self::CARD_ID_VARIABLE . "\" value=\"" . 
+					$this->card->cardID . "\">";
+	}
+	
+	private function makeSubmitButtonWithNameAndValue($name, $value) {
+		return "<input type=\"submit\" name=\"" . $name . "\" value=\"" . $value . "\">";
+	}
+	
+	private function getAnswerFormHeader() {
+		global $PAGE_GET_VAR, $PAGE_GET_NAME_REVIEW;
+		
+		return "<form action=\"?" . $PAGE_GET_VAR . "=" . $PAGE_GET_NAME_REVIEW . 
+						"\" method=\"POST\">";
 	}
 	
 	public function output() {

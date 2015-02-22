@@ -14,4 +14,11 @@ $PAGE_GET_NAME_REVIEW = "review";
 $ADD_POST_VARIABLE_FRONT = "cardFront";
 $ADD_POST_VARIABLE_BACK = "cardBack";
 
+// review post names
+$DIFFICULTY_POST_VARIABLE = "cardDifficulty";
+$DIFFICULTY_POST_WRONG = "Wrong";
+$DIFFICULTY_POST_HARD = "Hard";
+$DIFFICULTY_POST_GOOD = "Good";
+$DIFFICULTY_POST_EASY = "Easy";
+
 ?>

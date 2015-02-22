@@ -14,7 +14,7 @@ class Card {
 	public $interval = 0;
 	public $lastSeenDate = '2000-01-01';
 	public $nextDate = '0';
-	public $cardID = -1; // database ID for card
+	public $cardID = -1; // database ID for card; default is -1 because it will never appear in the DB
 	
 	public function __construct($front, $back) {
 		$this->front = $front;
