@@ -27,6 +27,9 @@ class DatabaseCommunicator {
 	const CARD_ENTRY_NEXT_SHOW = "nextShow";
 	const CARD_ENTRY_INTERVAL = "cardInterval";
 	
+	const CARD_DATE_LENGTH_OF_STRING = 10;
+	const CARD_LENGTH_OF_STRING = 16000000;
+	
 	private $db;
 
 	public function __construct() {
@@ -67,8 +70,8 @@ class DatabaseCommunicator {
 	private function createCardTable() {
 		$this->db->query('CREATE TABLE ' . self::CARD_TABLE_NAME . ' (
 			' . self::CARD_ENTRY_ID . ' INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-			' . self::CARD_ENTRY_FRONT . ' VARCHAR(16000000) NOT NULL,
-			' . self::CARD_ENTRY_BACK . ' VARCHAR(16000000),
+			' . self::CARD_ENTRY_FRONT . ' VARCHAR(' . self::CARD_LENGTH_OF_STRING . ') NOT NULL,
+			' . self::CARD_ENTRY_BACK . ' VARCHAR(' . self::CARD_LENGTH_OF_STRING . '),
 			' . self::CARD_ENTRY_LAST_SEEN . ' DATE,
 			' . self::CARD_ENTRY_NEXT_SHOW . ' DATE,
 			' . self::CARD_ENTRY_INTERVAL . ' INT(6) UNSIGNED
@@ -160,11 +163,19 @@ class DatabaseCommunicator {
 											' . self::CARD_ENTRY_LAST_SEEN . ',
 											' . self::CARD_ENTRY_NEXT_SHOW . ',
 											' . self::CARD_ENTRY_INTERVAL . ')
-									VALUES ( \'' . $card->front . '\',
-											 \'' . $card->back . '\',
-											 \'' . $card->lastSeenDate . '\',
-											 \'' . $card->nextDate . '\',
-											 \'' . $card->interval . '\');');
+									VALUES ( :front,
+											 :back,
+											 :lastSeenDate,
+											 :nextDate,
+											 :interval);');
+											 
+		// bind values
+		$stmt->bindParam(':front', $card->front, PDO::PARAM_STR, self::CARD_LENGTH_OF_STRING);
+		$stmt->bindParam(':back', $card->back, PDO::PARAM_STR, self::CARD_LENGTH_OF_STRING);
+		$stmt->bindParam(':lastSeenDate', $card->lastSeenDate, PDO::PARAM_STR, self::CARD_DATE_LENGTH_OF_STRING);
+		$stmt->bindParam(':nextDate', $card->nextDate, PDO::PARAM_STR, self::CARD_DATE_LENGTH_OF_STRING);
+		$stmt->bindParam(':interval', $card->interval, PDO::PARAM_INT);	
+		
 		
 		// execute statement and edit card object to have correct ID
 		if ($stmt->execute())
@@ -191,12 +202,19 @@ class DatabaseCommunicator {
 	public function appendCard($card) {
 		// prepare SQL statement
 		$stmt = $this->db->prepare('UPDATE ' . self::CARD_TABLE_NAME . '
-									SET ' . self::CARD_ENTRY_FRONT . '=\'' . $card->front . '\',
-										' . self::CARD_ENTRY_BACK . '=\'' . $card->back . '\',
-										' . self::CARD_ENTRY_LAST_SEEN . '=\'' . $card->lastSeenDate . '\',
-										' . self::CARD_ENTRY_NEXT_SHOW . '=\'' . $card->nextDate . '\',
-										' . self::CARD_ENTRY_INTERVAL . '=\'' . $card->interval . '\'
+									SET ' . self::CARD_ENTRY_FRONT . '=:front,
+										' . self::CARD_ENTRY_BACK . '=:back,
+										' . self::CARD_ENTRY_LAST_SEEN . '=:lastSeenDate,
+										' . self::CARD_ENTRY_NEXT_SHOW . '=:nextDate,
+										' . self::CARD_ENTRY_INTERVAL . '=:interval
 									WHERE id=' . $card->cardID . '');
+									
+		// bind values
+		$stmt->bindParam(':front', $card->front, PDO::PARAM_STR, self::CARD_LENGTH_OF_STRING);
+		$stmt->bindParam(':back', $card->back, PDO::PARAM_STR, self::CARD_LENGTH_OF_STRING);
+		$stmt->bindParam(':lastSeenDate', $card->lastSeenDate, PDO::PARAM_STR, self::CARD_DATE_LENGTH_OF_STRING);
+		$stmt->bindParam(':nextDate', $card->nextDate, PDO::PARAM_STR, self::CARD_DATE_LENGTH_OF_STRING);
+		$stmt->bindParam(':interval', $card->interval, PDO::PARAM_INT);	
 		
 		// execute statement
 		$stmt->execute();
