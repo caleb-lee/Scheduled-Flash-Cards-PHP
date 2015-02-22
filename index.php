@@ -32,6 +32,7 @@ if (!empty($_GET[$PAGE_GET_VAR])) {
 		// set the correct controller and view
 		$controller; // TODO
 		$view = new ReviewView($dbComm);
+		
 	} else {
 		// set the error class as the view
 		$view = new ErrorView();

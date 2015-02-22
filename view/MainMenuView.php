@@ -10,6 +10,7 @@ require_once('GenericView.php');
 
 class MainMenuView extends GenericView {
 	public function __construct() {
+		$this->showMainMenuLink = false;
 		$this->title = "Scheduled Flash Cards";
 		$this->body = $this->generateBody();
 	}

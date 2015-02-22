@@ -12,9 +12,13 @@
 abstract class GenericView {
 	public $title;
 	public $body;
+	public $showMainMenuLink = true;
 	
 	public function output() {
 		$output = "<h3>" . $this->title . "</h3>" . $this->body;
+		
+		if ($this->showMainMenuLink)
+			$output = $output . "<p><a href=\"?\">Back to Main Menu</a></p>";
 		
 		return $output;
 	}
