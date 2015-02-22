@@ -4,6 +4,7 @@ require_once('constants.php');
 require_once('view/AddView.php');
 require_once('view/MainMenuView.php');
 require_once('view/ErrorView.php');
+require_once('view/ReviewView.php');
 require_once('controller/AddController.php');
 require_once('model/DatabaseCommunicator.php');
 
@@ -28,7 +29,9 @@ if (!empty($_GET[$PAGE_GET_VAR])) {
 		$view = new AddView($controller);
 		
 	} elseif ($page == $PAGE_GET_NAME_REVIEW) {
-		// display review card prompt
+		// set the correct controller and view
+		$controller; // TODO
+		$view = new ReviewView($dbComm);
 	} else {
 		// set the error class as the view
 		$view = new ErrorView();
