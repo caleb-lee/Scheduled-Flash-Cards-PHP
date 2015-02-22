@@ -6,6 +6,7 @@ require_once('view/MainMenuView.php');
 require_once('view/ErrorView.php');
 require_once('view/ReviewView.php');
 require_once('controller/AddController.php');
+require_once('controller/ScheduleController.php');
 require_once('model/DatabaseCommunicator.php');
 
 // figure out which menu to display and display it
@@ -30,7 +31,7 @@ if (!empty($_GET[$PAGE_GET_VAR])) {
 		
 	} elseif ($page == $PAGE_GET_NAME_REVIEW) {
 		// set the correct controller and view
-		$controller; // TODO
+		$controller = new ScheduleController($dbComm);
 		$view = new ReviewView($dbComm);
 		
 	} else {

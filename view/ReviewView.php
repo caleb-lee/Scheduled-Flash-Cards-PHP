@@ -38,7 +38,7 @@ class ReviewView extends GenericView {
 			$this->answerMode = false;
 	}
 	
-	// generates a string to be used with the body property
+	// generates and returns a string to be used with the body property
 	private function generateBody() {
 		$body = "";
 	
