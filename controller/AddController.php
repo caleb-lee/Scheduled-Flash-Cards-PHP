@@ -43,7 +43,7 @@ class AddController {
 			$this->dbCommunicator->addCard($newCard);
 			$this->cardAdded = true;
 			$this->statusString = "Card added successfully.";
-		} else {
+		} elseif (isset($_POST[$ADD_POST_VARIABLE_FRONT])) { // only show error when attempting to add a card without a front
 			$this->statusString = "Card not added successfully. Missing front.";
 		}
 	}

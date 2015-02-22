@@ -45,10 +45,10 @@ class ReviewView extends GenericView {
 		if ($this->answerMode) {
 			// get card with ID
 			// display back
-			$body = $body + "<p>" . $this->getCardBack() . "</p>";
+			$body = $body . "<p>" . $this->getCardBack() . "</p>";
 			
 			// display difficulty buttons
-			$body = $body + $this->getDifficultyButtons();
+			$body = $body . $this->getDifficultyButtons();
 			
 		} else {
 			// get review card
@@ -78,17 +78,28 @@ class ReviewView extends GenericView {
 	}
 	
 	private function getShowAnswerButton () {
-		return ""; // TODO
+		global $PAGE_GET_VAR, $PAGE_GET_NAME_REVIEW;
+
+		$answerButton = "<form action=\"?" . $PAGE_GET_VAR . 
+						"=" . $PAGE_GET_NAME_REVIEW . 
+						"\" method=\"POST\"><input type=\"hidden\" name=\"" 
+						. self::CARD_MODE_VARIABLE . "\" value=\"" . 
+						self::CARD_MODE_ANSWER . "\"><input type=\"hidden\" name=\"" 
+						. self::CARD_ID_VARIABLE . "\" value=\"" . 
+						$this->card->cardID . "\">
+						<input type=\"submit\" value=\"Show Back\"></form>";
+	
+		return $answerButton; // TODO
 	}
 	
 	private function getCardBack() {
 		if (isset($_POST[self::CARD_ID_VARIABLE])) {
-			$cardID = $_POST[self::CARD_ID_VARIABLE];
+			$cardID = (int)($_POST[self::CARD_ID_VARIABLE]);
 			
 			$this->card = $this->dbComm->getCardWithID($cardID);
 			return $this->card->back;
 		} else
-			return "";
+			exit("ReviewView getCardBack() called unexpectedly");
 	}
 	
 	private function getDifficultyButtons() {
