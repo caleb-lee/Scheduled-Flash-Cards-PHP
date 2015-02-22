@@ -39,7 +39,10 @@ class AddController {
 		}
 		
 		if (!empty($front)) {
-			$newCard = new Card($front, $back);
+			$frontWithHTMLBreaks = str_replace("\n", "<br />", $front);
+			$backWithHTMLBreaks = str_replace("\n", "<br />", $back);
+					
+			$newCard = new Card($frontWithHTMLBreaks, $backWithHTMLBreaks);
 			$this->dbCommunicator->addCard($newCard);
 			$this->cardAdded = true;
 			$this->statusString = "Card added successfully.";
