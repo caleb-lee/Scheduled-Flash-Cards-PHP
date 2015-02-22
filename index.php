@@ -4,6 +4,8 @@ require_once('constants.php');
 require_once('view/AddView.php');
 require_once('view/MainMenuView.php');
 require_once('view/ErrorView.php');
+require_once('controller/AddController.php');
+require_once('model/DatabaseCommunicator.php');
 
 // figure out which menu to display and display it
 //	also figure out the correct controller if applicable
@@ -15,10 +17,16 @@ $viewOutput = "";
 if (!empty($_GET[$PAGE_GET_VAR])) {
 	// get page URL if it exists
 	$page = $_GET[$PAGE_GET_VAR];
+	
+	// we'll probably need a database connection here, so set that up
+	$dbComm = new DatabaseCommunicator();
 
 	if ($page == $PAGE_GET_NAME_ADD) {
+		// set the correct controller
+		$controller = new AddController($dbComm);
 		// set correct view
-		$view = new AddView();
+		$view = new AddView($controller);
+		
 	} elseif ($page == $PAGE_GET_NAME_REVIEW) {
 		// display review card prompt
 	} else {

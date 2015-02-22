@@ -12,13 +12,15 @@ class Card {
 	public $front;
 	public $back;
 	public $interval = 0;
-	public $lastSeenDate = '0';
+	public $lastSeenDate = '2000-01-01';
 	public $nextDate = '0';
 	public $cardID = -1; // database ID for card
 	
 	public function __construct($front, $back) {
 		$this->front = $front;
 		$this->back = $back;
+		
+		$this->nextDate = date("Y-m-d");
 	}
 }
 

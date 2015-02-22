@@ -9,18 +9,27 @@
  
 require_once(__DIR__ . '/../constants.php');
 require_once('GenericView.php');
+require_once(__DIR__ . '/../controller/AddController.php');
  
 class AddView extends GenericView {
-	public function __construct() {
+	private $controller;
+
+	public function __construct($controller) {
 		$this->title = "Add Card";
 		$this->body = ""; // we are going to generate the body when body is called
+		$this->controller = $controller;
 	}
 	
 	private function generateBody() {
 		global $PAGE_GET_VAR, $PAGE_GET_NAME_ADD, $ADD_POST_VARIABLE_FRONT, 
 					$ADD_POST_VARIABLE_BACK;
 		
-		$body = "<form action=\"?" . $PAGE_GET_VAR . "=" . 
+		$body = "";
+		
+		if ($this->controller->statusString() != "")
+			$body = $body . "<p>" . $this->controller->statusString() . "</p>";
+		
+		$body = $body . "<form action=\"?" . $PAGE_GET_VAR . "=" . 
 					$PAGE_GET_NAME_ADD . "\" method=\"post\">\n";
 		$body = $body . "Card Front: <br />\n";
 		$body = $body . $this->generateTextAreaWithName($ADD_POST_VARIABLE_FRONT);
