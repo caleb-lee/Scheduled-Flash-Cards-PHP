@@ -40,6 +40,9 @@ class DatabaseCommunicator {
 							self::DB_USERNAME, self::DB_PASSWORD);
 			$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+			
+			// sync php and mysql time zones before we continue
+			$this->syncTimeZones();
 		} catch(PDOException $ex) {
 			echo "<b>Set correct database information in 'model/DatabaseCommunicator.php'</b><br /><br />";
 			echo $ex;
@@ -48,6 +51,18 @@ class DatabaseCommunicator {
 		// check if card table exists; if not create it
 		if (!$this->cardTableExists())
 			$this->createCardTable();
+	}
+	
+	// syncs the time zones between php and mysql so that we don't get wonky behaviors
+	// like not being able to immediately review added cards when added late in the day
+	// in eastern or central time
+	// taken from the comments of
+	// http://www.sitepoint.com/synchronize-php-mysql-timezone-configuration/
+	private function syncTimeZones() {
+		$dt = new DateTime();
+		$offset = $dt->format("P");
+	
+		$this->db->exec("SET time_zone='" . $offset . "';");
 	}
 	
 	// checks if the flashcard table exists
