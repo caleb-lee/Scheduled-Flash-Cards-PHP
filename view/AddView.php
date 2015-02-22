@@ -13,6 +13,9 @@ require_once(__DIR__ . '/../controller/AddController.php');
  
 class AddView extends GenericView {
 	private $controller;
+	
+	const TEXT_AREA_ROWS = 15;
+	const TEXT_AREA_COLS = 70;
 
 	public function __construct($controller) {
 		$this->title = "Add Card";
@@ -42,11 +45,10 @@ class AddView extends GenericView {
 	}
 	
 	private function generateTextAreaWithName($name) {
-		$TEXT_AREA_ROWS = 15;
-		$TEXT_AREA_COLS = 70;
 		
-		return "<textarea name=\"" . $name . "\" rows=\"" . $TEXT_AREA_ROWS . 
-					"\" cols=\"" . $TEXT_AREA_COLS . "\"></textarea><br /><br />";
+		
+		return "<textarea name=\"" . $name . "\" rows=\"" . self::TEXT_AREA_ROWS . 
+					"\" cols=\"" . self::TEXT_AREA_COLS . "\"></textarea><br /><br />";
 	}
 	
 	public function output() {
