@@ -39,16 +39,23 @@ class AddController {
 		}
 		
 		if (!empty($front)) {
-			$frontWithHTMLBreaks = str_replace("\n", "<br />", $front);
-			$backWithHTMLBreaks = str_replace("\n", "<br />", $back);
+			$sanitizedFront = $this->sanitize($front);
+			$sanitizedBack = $this->sanitize($back);
 					
-			$newCard = new Card($frontWithHTMLBreaks, $backWithHTMLBreaks);
+			$newCard = new Card($sanitizedFront, $sanitizedBack);
 			$this->dbCommunicator->addCard($newCard);
 			$this->cardAdded = true;
 			$this->statusString = "Card added successfully.";
 		} elseif (isset($_POST[$ADD_POST_VARIABLE_FRONT])) { // only show error when attempting to add a card without a front
 			$this->statusString = "Card not added successfully. Missing front.";
 		}
+	}
+	
+	private function sanitize($string) {
+		$stringWithoutHTMLSpecialCharacters = htmlspecialchars($string);
+		$stringWithHTMLBreaks = str_replace("\n", "<br />", $stringWithoutHTMLSpecialCharacters);
+		
+		return $stringWithHTMLBreaks;
 	}
 	
 	public function cardAdded() {
