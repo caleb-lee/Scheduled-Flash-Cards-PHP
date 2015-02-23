@@ -156,7 +156,7 @@ class DatabaseCommunicator {
 									ORDER BY ' . self::CARD_ENTRY_NEXT_SHOW . ' ASC 
 									LIMIT ' . $limit . ' OFFSET ' . $firstCard);
 									
-		$cardArray;
+		$cardArray = array();
 		$i = 0;
 		$row = $result->fetch();
 		while (!empty($row)) {
