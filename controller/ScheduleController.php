@@ -39,7 +39,10 @@ class ScheduleController {
 			$this->dbComm->appendCard($this->card);
 			
 			// set the status string
-			$this->status = "Previous card will be seen again in " . $this->card->interval . " days.";
+			if ($this->card->interval == 1)
+				$this->status = "Previous card will be seen again in " . $this->card->interval . " day.";
+			else
+				$this->status = "Previous card will be seen again in " . $this->card->interval . " days.";
 		}
 	}
 	
