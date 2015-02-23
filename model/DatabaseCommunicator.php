@@ -6,6 +6,9 @@
  * This class does all database communication and converts everything into usable forms
  *	(i.e., Card objects) for the rest of the application. In its current form, it uses
  *	MySQL.
+ *
+ * This class does not ever establish a connection to the MySQL database unless one
+ *	of the CRUD methods is called.
  **/
  
 require_once('Card.php');
@@ -31,8 +34,14 @@ class DatabaseCommunicator {
 	const CARD_LENGTH_OF_STRING = 16000000;
 	
 	private $db;
+	private $dbConnected;
 
 	public function __construct() {
+		$this->dbConnected = false;
+	}
+	
+	// connects to the database and creates the card table if needed 
+	private function connectDatabase() {
 		// connect to mysql and select the correct db
 		try {
 			$this->db = new PDO('mysql:host=' . self::DB_URL . ';port=' . self::DB_PORT . 
@@ -40,6 +49,8 @@ class DatabaseCommunicator {
 							self::DB_USERNAME, self::DB_PASSWORD);
 			$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+			
+			$this->dbConnected = true;
 			
 			// sync php and mysql time zones before we continue
 			$this->syncTimeZones();
@@ -101,6 +112,10 @@ class DatabaseCommunicator {
 	
 	// get card with ID
 	public function getCardWithID($cardID) {
+		// connect to the database if we haven't already
+		if (!$this->dbConnected)
+			$this->connectDatabase();
+	
 		// do sql query
 		$result = $this->db->query('SELECT * FROM ' . self::CARD_TABLE_NAME . '
 									WHERE id=' . $cardID);
@@ -127,6 +142,10 @@ class DatabaseCommunicator {
 	//	this grabs a single card which has a due date less than or equal to today
 	//	if there are no due cards; it returns null
 	public function getReviewCard() {
+		// connect to the database if we haven't already
+		if (!$this->dbConnected)
+			$this->connectDatabase();
+	
 		$result = $this->db->query('SELECT * FROM ' . self::CARD_TABLE_NAME . '
 									WHERE ' . self::CARD_ENTRY_NEXT_SHOW . ' <= CURDATE()
 									ORDER BY ' . self::CARD_ENTRY_NEXT_SHOW . ', ' 
@@ -144,6 +163,10 @@ class DatabaseCommunicator {
 	//	$lastCard must be less than countCards()
 	// $firstCard must be >= 0
 	public function getCards($firstCard, $lastCard) {
+		// connect to the database if we haven't already
+		if (!$this->dbConnected)
+			$this->connectDatabase();
+	
 		if ($firstCard > $lastCard)
 			exit("DatabaseCommunicator error: $firstCard greater than $lastCard");
 		if ($lastCard >= $this->countCards())
@@ -170,6 +193,10 @@ class DatabaseCommunicator {
 	
 	// gets total number of cards in database
 	public function countCards() {
+		// connect to the database if we haven't already
+		if (!$this->dbConnected)
+			$this->connectDatabase();
+	
 		$countResult = $this->db->query('SELECT * FROM ' . self::CARD_TABLE_NAME);
 		return $countResult->rowCount();
 	}
@@ -177,6 +204,10 @@ class DatabaseCommunicator {
 	// adds a card to the database
 	//	$card must be of type Card
 	public function addCard($card) {
+		// connect to the database if we haven't already
+		if (!$this->dbConnected)
+			$this->connectDatabase();
+	
 		// prepare SQL statement
 		$stmt = $this->db->prepare('INSERT INTO ' . self::CARD_TABLE_NAME . 
 											'(' . self::CARD_ENTRY_FRONT . ',
@@ -208,6 +239,10 @@ class DatabaseCommunicator {
 	//	does nothing if card with id doesn't exist in database
 	//	ONLY THE ID HAS TO MATCH
 	public function deleteCard($card) {
+		// connect to the database if we haven't already
+		if (!$this->dbConnected)
+			$this->connectDatabase();
+	
 		// prepare SQL statement
 		$stmt = $this->db->prepare('DELETE FROM ' . self::CARD_TABLE_NAME . ' WHERE
 									id=' . $card->cardID . ' LIMIT 1');
@@ -221,6 +256,10 @@ class DatabaseCommunicator {
 	//	does nothing if card with id does not exist in database
 	//	ONLY THE ID HAS TO MATCH
 	public function appendCard($card) {
+		// connect to the database if we haven't already
+		if (!$this->dbConnected)
+			$this->connectDatabase();
+	
 		// prepare SQL statement
 		$stmt = $this->db->prepare('UPDATE ' . self::CARD_TABLE_NAME . '
 									SET ' . self::CARD_ENTRY_FRONT . '=:front,
