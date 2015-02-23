@@ -47,7 +47,7 @@ if (!empty($_GET[$PAGE_GET_VAR])) {
 $viewOutput = $view->output();
 
 // set the page title
-$pageTitle = $APP_TITLE . " - " . $view->title;
+$pageTitle = $APP_TITLE . " - " . $view->title();
 
 ?>
 
